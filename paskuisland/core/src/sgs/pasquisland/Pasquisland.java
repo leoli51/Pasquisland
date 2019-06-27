@@ -18,7 +18,7 @@ import sgs.ui.MainUI;
 
 /**
  * Ciao belli,
- * questa è la classe che gestisce tutte le cose , è la classe centrale che chiama
+ * questa ï¿½ la classe che gestisce tutte le cose , ï¿½ la classe centrale che chiama
  * e crea le altre classi!
  *
  */
@@ -47,7 +47,7 @@ public class Pasquisland extends ApplicationAdapter {
 		int map_height = 128;
 		
 		random = new Random(System.nanoTime());
-		mappone = new Mappone(map_width, map_height);
+		mappone = Mappone.createInstance(map_width, map_height);
 		
 		camera = new OrthographicCamera();
 		cam_mov = new CameraMover(camera, map_width, map_height);

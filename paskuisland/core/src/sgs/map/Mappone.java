@@ -26,16 +26,19 @@ import sgs.pasquisland.Pasquisland;
 public class Mappone {
 
 	private static Mappone singleton;
+	
+	
 	private WorldMap map; // mappa con le grafiche e ti dice se � acqua o terra il terreno
 	private HashMap<GridPoint2, Array<Entity>> mappa_entita; // mappa 2d delle entita
+	private HashMap<String, Integer> population_count;
 	private Array<Entity> da_aggiornare;
 	private Array<Entity> crepate;
 	private Array<Entity> girini;
 	private Array<Entity> nellaGriglia;
+	
 	private int selected = 0;
 
-	public Mappone(int map_width, int map_height) {
-		if (singleton == null) singleton = this;
+	private Mappone(int map_width, int map_height) {
 		float[] terrain_values = new float[3];
 		terrain_values[0] = .2f;
 		terrain_values[1] = .3f;
@@ -211,6 +214,11 @@ public class Mappone {
 		return  singleton;
 	}
 	
+	public static Mappone createInstance(int width, int height) {
+		singleton = new Mappone(width, height);
+		return singleton;
+	}
+	
 	public void spawnaBimbo(Omino genitore1, Omino genitore2) {
 		Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
 		int r1= r.nextInt(2);
@@ -279,6 +287,5 @@ public class Mappone {
 		return false;
 	}
 	
-
 
 }

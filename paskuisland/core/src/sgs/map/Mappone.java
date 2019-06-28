@@ -2,8 +2,8 @@ package sgs.map;
 
 import java.util.HashMap;
 import java.util.Random;
-
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import sgs.entities.Entity;
+import sgs.entities.EntityProcessor;
 import sgs.entities.Omino;
 import sgs.entities.Palma;
 import sgs.entities.posRandom;
@@ -31,10 +32,11 @@ public class Mappone {
 	private WorldMap map; // mappa con le grafiche e ti dice se � acqua o terra il terreno
 	private HashMap<GridPoint2, Array<Entity>> mappa_entita; // mappa 2d delle entita
 	private HashMap<String, Integer> population_count;
-	private Array<Entity> da_aggiornare;
-	private Array<Entity> crepate;
-	private Array<Entity> girini;
-	private Array<Entity> nellaGriglia;
+	
+	private Array<EntityProcessor> processors;
+	private ScheduledExecutorService executor;
+	
+	private Array<Entity> selected_entities;
 	
 	private int selected = 0;
 
@@ -46,34 +48,36 @@ public class Mappone {
 		map = new WorldMap(map_width, map_height, ((Pasquisland) Gdx.app.getApplicationListener()).getRandom().nextInt(1000000),
 				200f, 4, .3f, 2f, Vector2.Zero, terrain_values, true, .1f);
 		mappa_entita = new HashMap<GridPoint2, Array<Entity>>();
-		nellaGriglia= new Array<Entity>();
-		da_aggiornare = new Array<Entity>();
-		crepate = new Array<Entity>();
-		girini = new Array<Entity>();
+		selected_entities= new Array<Entity>();
+		
+		for (int x = 0; x < map_width; x++)
+			for (int y = 0; y < map_height; y++)
+				chiCeStaQua(x, y);
+		
+		processors = new Array<EntityProcessor>();
+		executor = Executors.newScheduledThreadPool(32);
 	}
 	
 	public void aggiorna(float delta) {
-		for (Entity e : da_aggiornare) {
-			e.update(delta);
-			if (e.life <= 0)
-				crepate.add(e);
+		int pop_count = 0;
+		for (int i = 0; i < processors.size; i++) {
+			pop_count += processors.get(i).getEntities().size;
+			executor.execute(processors.get(i));
 		}
-		da_aggiornare.removeAll(crepate, true);
-		for (Entity e : crepate)
-			chiCeStaQua(e.gridposition).removeValue(e, true);
-		crepate.clear();
+		
+		Gdx.app.log("MIM", pop_count + " OMINI, "+processors.size+" Entity processors");
 	}
 
 	public void disegnaTutto(SpriteBatch batch, ShapeRenderer sr, int[] che_se_vede) {
 		disegnaMappetta(sr, che_se_vede);
 		sr.begin(ShapeType.Filled);
-		for (Entity entita : nellaGriglia) {
+		for (Entity entita : selected_entities) {
 			sr.setColor(Color.RED);
 			for (Entity e :vedi((Omino) entita, Omino.RAGGIO_VISIVO)) {
 				sr.rect(e.position.x, e.position.y, 30, 30); //perch� ogni quadrato � 32x32 => per non avere rettangoli in caso di entit� vicine considero un'area minore :)	
 			}
 		}
-		for (Entity entita : nellaGriglia) {
+		for (Entity entita : selected_entities) {
 			sr.setColor(Color.CHARTREUSE);
 			sr.rect(entita.position.x, entita.position.y, 30, 30); //perch� ogni quadrato � 32x32 => per non avere rettangoli in caso di entit� vicine considero un'area minore :)
 		}
@@ -83,9 +87,9 @@ public class Mappone {
 		disegnaEntita(batch);
 		batch.disableBlending();
 		batch.end();
-		for( Entity e: nellaGriglia) {
+		for( Entity e: selected_entities) {
 			if(e.life<=0) {
-				nellaGriglia.removeValue(e, true);
+				selected_entities.removeValue(e, true);
 			}
 		}
 	}
@@ -95,10 +99,20 @@ public class Mappone {
 	}
 	
 	public void disegnaEntita(SpriteBatch batch) {
-		for (Entity e : da_aggiornare)
-			e.disegnami(batch);
+		//DAngerous code ... ep.getEntities è synchonized su da_aggiornare
+		//Vedere in EntityProcessor
+		for (int i = 0; i < processors.size; i++)
+			for (int ei = 0; ei < processors.get(i).getEntities().size; ei++)
+				processors.get(i).getEntities().get(ei).disegnami(batch);
+		
 	}
 
+	/**
+	 * @exception ATTENZIONE se leggete / modificate le liste ritornate da 
+	 * questo metodo senza prima sincronizzarvi su di esse succedono brutte cose
+	 * @param qua
+	 * @return
+	 */
 	public Array<Entity> chiCeStaQua(GridPoint2 qua) {
 		Array<Entity> ecco_la_lista = mappa_entita.get(qua);
 		if (ecco_la_lista == null) {
@@ -107,6 +121,13 @@ public class Mappone {
 		}
 		return ecco_la_lista;
 	}
+	
+	/**
+	 * @see chiCeStaQua(GridPoint2 qua)
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public Array<Entity> chiCeStaQua(int x, int y) {
 		GridPoint2 p = new GridPoint2(x,y);
 		return chiCeStaQua(p);
@@ -123,8 +144,7 @@ public class Mappone {
 				if(map.getTerrainTypeAt(x, y)!=map.water_id) {
 					if(r.nextFloat()<densita) {
 						Omino primoUomo= new Omino(x*map.tile_size,y*map.tile_size);
-						da_aggiornare.add(primoUomo);
-						chiCeStaQua(x,y).add(primoUomo); 
+						registerEntity(primoUomo);
 					}	
 				}
 			}
@@ -138,9 +158,8 @@ public class Mappone {
 				if(map.getTerrainTypeAt(x, y)==map.land_id) {
 					if(r.nextFloat()<densita) {
 						Palma cespuglio= new Palma(x*map.tile_size,y*map.tile_size);
-						da_aggiornare.add(cespuglio);
-						chiCeStaQua(x,y).add(cespuglio);
-						}
+						registerEntity(cespuglio);
+					}
 				}
 			}
 		}
@@ -149,16 +168,19 @@ public class Mappone {
 	public void ammazzaOmini() {
 		for(int y=0; y<map.getHeight(); y++) {
 			for(int x=0; x< map.getWidth(); x++) {
-				if(map.getTerrainTypeAt(x, y)!=map.water_id) {
+				synchronized(chiCeStaQua(x,y)) {
 					chiCeStaQua(x, y).clear();
 				}
 			}
 		}
-		da_aggiornare.clear();
+		
+		for (EntityProcessor ep : processors) {
+			ep.getEntities().clear();
+		}
 	}
 	
 
-	public int getPopulationCount() {return da_aggiornare.size;}
+	//public int getPopulationCount() {return da_aggiornare.size;}
 	
 	public posRandom posizioneIntorno(GridPoint2 posizione) {
 		posRandom newpos = new posRandom(posizione.x*map.tile_size,posizione.y*map.tile_size);
@@ -184,22 +206,25 @@ public class Mappone {
 			if(y< map.getHeight() && y>=0) {
 				for( int x= omino.gridposition.x-raggio; x<=omino.gridposition.x+raggio; x++) {
 					if (x< map.getWidth() && x>=0) {
-						if( y==omino.gridposition.y && x== omino.gridposition.x) {
-							for(Entity entita: chiCeStaQua(x,y)) {
-								if(entita != omino) {
-									RaggioVisivo.add(entita);
+						//DANGER
+						synchronized(chiCeStaQua(x,y)) {
+							Array<Entity> ccsq = chiCeStaQua(x,y);
+							if( y==omino.gridposition.y && x== omino.gridposition.x) {
+								for(int ei = 0; ei < ccsq.size; ei++) {
+									if(ccsq.get(ei) != omino) {
+										RaggioVisivo.add(ccsq.get(ei));
+									}
+								}
 							}
-						}
-					}
-						else if(map.getTerrainTypeAt(x, y)!= WorldMap.water_id) {
-							for(Entity entita: chiCeStaQua(x,y)) {
-								RaggioVisivo.add(entita);
+							else {
+									RaggioVisivo.addAll(ccsq);
 							}
 						}
 					}
 				}
 			}
 		}
+		
 		if(add_pos==true) {
 		RaggioVisivo.add(posizioneIntorno(omino.gridposition));
 		}
@@ -224,16 +249,14 @@ public class Mappone {
 		int r1= r.nextInt(2);
 		if(r1==0) {
 			posRandom newpos= posizioneIntorno(genitore1.gridposition);
-			Omino bimbo= new Omino(newpos.gridposition.x*map.tile_size,newpos.gridposition.y*map.tile_size);
-			da_aggiornare.add(bimbo);
-			chiCeStaQua(newpos.gridposition.x, newpos.gridposition.y).add(bimbo);
+			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
+			registerEntity(bimbo);
 			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
 		}
 		else if(r1==1){
 			posRandom newpos= posizioneIntorno(genitore2.gridposition);
-			Omino bimbo= new Omino(newpos.gridposition.x*map.tile_size,newpos.gridposition.y*map.tile_size);
-			da_aggiornare.add(bimbo);
-			chiCeStaQua(newpos.gridposition.x, newpos.gridposition.y).add(bimbo);
+			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
+			registerEntity(bimbo);
 			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
 		}
 	}
@@ -247,7 +270,7 @@ public class Mappone {
 	}
 
 	public void vediRect(Rectangle rettangolo) {
-		nellaGriglia.clear();
+		selected_entities.clear();
 		int xgs= (int) (rettangolo.x/map.tile_size);//vertice basso sx griglia
 		int ygs= (int) (rettangolo.y/map.tile_size);//vertice basso sx griglia
 		float yd= rettangolo.y+ rettangolo.height;// vertice alto dx pixel
@@ -260,7 +283,7 @@ public class Mappone {
 					if(rettangolo.x<=map.getWidth()*map.tile_size && x>=0) 
 					for( Entity entita: chiCeStaQua(x,y)) {
 						if(entita instanceof Omino) {
-							nellaGriglia.add(entita);
+							selected_entities.add(entita);
 							}
 						}
 					}
@@ -272,10 +295,21 @@ public class Mappone {
 	if(map.getTerrainTypeAt(newpos.gridposition.x, newpos.gridposition.y)== map.land_id) {
 		if(!presente(newpos.gridposition.x,newpos.gridposition.y,Palma.class)) {
 			Palma palmetta= new Palma(newpos.gridposition.x*map.tile_size,newpos.gridposition.y*map.tile_size);
-			da_aggiornare.add(palmetta);
-			chiCeStaQua(newpos.gridposition.x, newpos.gridposition.y).add(palmetta);
+			registerEntity(palmetta);
 			return;
 			}
+		}
+	}
+	
+	/**
+	 * Metodo che Evita di riscrivere 20 volte la stessa parte di codice <3
+	 * 
+	 * @param e
+	 */
+	private void registerEntity(Entity entity) {
+		getFreeProcessor().addEntity(entity);
+		synchronized(chiCeStaQua(entity.gridposition)) {
+			chiCeStaQua(entity.gridposition).add(entity);
 		}
 	}
 	
@@ -287,5 +321,15 @@ public class Mappone {
 		return false;
 	}
 	
+	private EntityProcessor getFreeProcessor() {
+		for (EntityProcessor check : processors)
+			if (!check.isFull())
+				return check;
+		
+		EntityProcessor processor = new EntityProcessor();
+		processors.add(processor);
+		
+		return processor;
+	}
 
 }

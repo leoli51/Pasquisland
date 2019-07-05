@@ -157,7 +157,7 @@ public class MainUI extends Stage {
 		apply_gaussian.addListener(updateMapListener);
 		
 		//#########################################################################
-
+		
 		
 		//### ENTITY SETTINGS ###
 		

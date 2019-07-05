@@ -20,17 +20,17 @@ public class Omino extends Entity {
 	
 	private static Random random;
 	
-	public static final int RAGGIO_VISIVO = 4;
-	public static final float ACTION_DST = 20;
-	public static final float BLOCCO_INT = 2f;
-	//public static final float PREGNANCY = .1f;
-	public static final float HUNGER_PER_SECOND = .2f; // la fame arriva a 1 in 5 sec
-	public static final float MATURITY = 17;
+	public static int RAGGIO_VISIVO = 4;
+	public static float ACTION_DST = 20;
+	public static float BLOCCO_INT = 2f;
+	public static float PREGNANCY = .1f;
+	public static float HUNGER_PER_SECOND = .2f; // la fame arriva a 1 in 5 sec
+	public static float MATURITY = 17;
 	
 	/* BOUNDARIES FOR STATS */
-	public static final float MIN_STRENGTH = 0, MAX_STRENGTH = 1;
-	public static final float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
-	public static final float MIN_SPEED = 32, MAX_SPEED = 96;
+	public static float MIN_STRENGTH = 0, MAX_STRENGTH = 1;
+	public static float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
+	public static float MIN_SPEED = 32, MAX_SPEED = 96;
 	
 	public static Texture texture = new Texture(Gdx.files.internal("spy.png"));
 	  

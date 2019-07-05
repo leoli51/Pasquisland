@@ -81,7 +81,7 @@ public class Mappone {
 		batch.disableBlending();
 		batch.end();
 		for( Entity e: nellaGriglia) {
-			if(e.life<=0) {
+			if(e.life<0) {
 				nellaGriglia.removeValue(e, true);
 			}
 		}

@@ -73,4 +73,5 @@ public class SettingsUI extends Table {
 		map.generateMap();
 	}
 	 */
+	
 }

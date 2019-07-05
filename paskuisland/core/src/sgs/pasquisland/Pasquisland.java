@@ -39,6 +39,10 @@ public class Pasquisland extends ApplicationAdapter {
 	Mappone mappone;
 	
 	Random random;
+	
+	public static float oratio;
+	public static float pratio;
+	
 
 	
 	@Override
@@ -70,7 +74,7 @@ public class Pasquisland extends ApplicationAdapter {
 		multi_input.addProcessor(cam_mov);
 		Gdx.input.setInputProcessor(multi_input);
 		
-		startSimulation();		
+		//startSimulation();		
 	}
 
 	@Override
@@ -114,10 +118,9 @@ public class Pasquisland extends ApplicationAdapter {
 	public Random getRandom() {
 		return random;
 	}
-	
 	public void startSimulation() {
-		mappone.spammaOmini(.1f);
-		mappone.spammaPalme(.3f);
+		mappone.spammaOmini(oratio);
+		mappone.spammaPalme(pratio);
 	}
 	
 	public void stopSimulation() {

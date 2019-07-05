@@ -1,11 +1,13 @@
 package sgs.entities;
 
+import java.util.concurrent.Callable;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 import sgs.map.Mappone;
 
-public class EntityProcessor implements Runnable {
+public class EntityProcessor implements Callable<Boolean> {
 	
 	private static final int MAX_ENTITIES = 256;
 	
@@ -18,7 +20,7 @@ public class EntityProcessor implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public Boolean call() {
 		for (Entity entity : da_aggiornare) {
 			entity.update(Gdx.graphics.getRawDeltaTime());
 			if (entity.life <= 0)
@@ -28,12 +30,21 @@ public class EntityProcessor implements Runnable {
 		synchronized(da_aggiornare) {
 			da_aggiornare.removeAll(crepate, true);
 		}
-		for (Entity entity : crepate)
+		for (Entity entity : crepate) {
 			synchronized(Mappone.getInstance().chiCeStaQua(entity.gridposition)) {
 				Mappone.getInstance().chiCeStaQua(entity.gridposition).removeValue(entity, true);
 			}
+			if (entity instanceof Omino) {
+				synchronized(Mappone.getInstance().getPopulationCountDictionary()) {
+					Mappone.getInstance().getPopulationCountDictionary().put(((Omino) entity).tribu, 
+							Mappone.getInstance().getPopulationCountDictionary().get(((Omino) entity).tribu) - 1);
+				}
+			}
+		}
 		
 		crepate.clear();
+		
+		return true;
 	}
 	
 	public boolean isFull() {

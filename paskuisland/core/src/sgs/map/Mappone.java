@@ -1,9 +1,11 @@
 package sgs.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -32,8 +34,10 @@ public class Mappone {
 	private WorldMap map; // mappa con le grafiche e ti dice se � acqua o terra il terreno
 	private HashMap<GridPoint2, Array<Entity>> mappa_entita; // mappa 2d delle entita
 	private HashMap<String, Integer> population_count;
+	public static int MAX_POPULATION = 1000;
 	
-	private Array<EntityProcessor> processors;
+	private ArrayList<EntityProcessor> processors;
+	private Array<Entity> to_add;
 	private ScheduledExecutorService executor;
 	
 	private Array<Entity> selected_entities;
@@ -54,18 +58,37 @@ public class Mappone {
 			for (int y = 0; y < map_height; y++)
 				chiCeStaQua(x, y);
 		
-		processors = new Array<EntityProcessor>();
-		executor = Executors.newScheduledThreadPool(32);
+		processors = new ArrayList<EntityProcessor>();
+		to_add = new Array<Entity>();
+		
+		population_count = new HashMap<String, Integer>();
+		
+		executor = Executors.newScheduledThreadPool(64);
 	}
 	
 	public void aggiorna(float delta) {
 		int pop_count = 0;
-		for (int i = 0; i < processors.size; i++) {
+		for (int i = 0; i < processors.size(); i++) {
 			pop_count += processors.get(i).getEntities().size;
-			executor.execute(processors.get(i));
+			//executor.execute(processors.get(i));
 		}
 		
-		Gdx.app.log("MIM", pop_count + " OMINI, "+processors.size+" Entity processors");
+		synchronized(processors) {
+			try {
+				executor.invokeAll(processors);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		//AGGIUNGIAMO TUTTE LE ENTITà CREATE A STO GIRO
+		for (Entity entity : to_add)
+			registerEntity(entity);
+		
+		to_add.clear();
+		
+		
+		Gdx.app.log("MIM", pop_count + " OMINI, "+processors.size()+" Entity processors");
 	}
 
 	public void disegnaTutto(SpriteBatch batch, ShapeRenderer sr, int[] che_se_vede) {
@@ -101,7 +124,7 @@ public class Mappone {
 	public void disegnaEntita(SpriteBatch batch) {
 		//DAngerous code ... ep.getEntities è synchonized su da_aggiornare
 		//Vedere in EntityProcessor
-		for (int i = 0; i < processors.size; i++)
+		for (int i = 0; i < processors.size(); i++)
 			for (int ei = 0; ei < processors.get(i).getEntities().size; ei++)
 				processors.get(i).getEntities().get(ei).disegnami(batch);
 		
@@ -144,7 +167,7 @@ public class Mappone {
 				if(map.getTerrainTypeAt(x, y)!=map.water_id) {
 					if(r.nextFloat()<densita) {
 						Omino primoUomo= new Omino(x*map.tile_size,y*map.tile_size);
-						registerEntity(primoUomo);
+						waitToBeRegistered(primoUomo);
 					}	
 				}
 			}
@@ -158,7 +181,7 @@ public class Mappone {
 				if(map.getTerrainTypeAt(x, y)==map.land_id) {
 					if(r.nextFloat()<densita) {
 						Palma cespuglio= new Palma(x*map.tile_size,y*map.tile_size);
-						registerEntity(cespuglio);
+						waitToBeRegistered(cespuglio);
 					}
 				}
 			}
@@ -177,6 +200,8 @@ public class Mappone {
 		for (EntityProcessor ep : processors) {
 			ep.getEntities().clear();
 		}
+		
+		population_count.clear();
 	}
 	
 
@@ -250,13 +275,13 @@ public class Mappone {
 		if(r1==0) {
 			posRandom newpos= posizioneIntorno(genitore1.gridposition);
 			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
-			registerEntity(bimbo);
+			waitToBeRegistered(bimbo);
 			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
 		}
 		else if(r1==1){
 			posRandom newpos= posizioneIntorno(genitore2.gridposition);
 			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
-			registerEntity(bimbo);
+			waitToBeRegistered(bimbo);
 			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
 		}
 	}
@@ -295,10 +320,14 @@ public class Mappone {
 	if(map.getTerrainTypeAt(newpos.gridposition.x, newpos.gridposition.y)== map.land_id) {
 		if(!presente(newpos.gridposition.x,newpos.gridposition.y,Palma.class)) {
 			Palma palmetta= new Palma(newpos.gridposition.x*map.tile_size,newpos.gridposition.y*map.tile_size);
-			registerEntity(palmetta);
+			waitToBeRegistered(palmetta);
 			return;
 			}
 		}
+	}
+	
+	public HashMap<String, Integer> getPopulationCountDictionary() {
+		return population_count;
 	}
 	
 	/**
@@ -306,6 +335,20 @@ public class Mappone {
 	 * 
 	 * @param e
 	 */
+	private void waitToBeRegistered(Entity entity) {
+		if (entity instanceof Omino) {
+			if (population_count.getOrDefault(((Omino) entity).tribu, 0) < MAX_POPULATION) {
+				to_add.add(entity);
+				population_count.put(((Omino) entity).tribu, population_count.getOrDefault(((Omino) entity).tribu, 0) + 1);
+			}
+			else 
+				Gdx.app.log("tribesmen limit", "too many tribesmen of tribe : "+((Omino) entity).tribu+ " count: "+ population_count.getOrDefault(((Omino) entity).tribu, 0));
+		}
+		else {
+			to_add.add(entity);
+		}
+	}
+	
 	private void registerEntity(Entity entity) {
 		getFreeProcessor().addEntity(entity);
 		synchronized(chiCeStaQua(entity.gridposition)) {

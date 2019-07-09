@@ -129,7 +129,7 @@ public class MainUI extends Stage {
 					
 					max_fort.setText(r.nextInt(999)+"");//updateEntities();
 					view_range.setText(r.nextInt(9)+"");//updateEntities();
-					action_range.setText(r.nextInt(9)+10+"");//updateEntities();
+					action_range.setText(r.nextInt(9)+"");//updateEntities();
 					//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 					hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 					maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -305,9 +305,9 @@ public class MainUI extends Stage {
 			{
 				Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
 				
-				max_fort.setText(r.nextInt(900)+100+"");//updateEntities();
-				view_range.setText(r.nextInt(7)+3+"");//updateEntities();
-				action_range.setText(r.nextInt(9)+10+"");//updateEntities();
+				max_fort.setText(r.nextInt(999)+"");//updateEntities();
+				view_range.setText(r.nextInt(9)+"");//updateEntities();
+				action_range.setText(r.nextInt(9)+"");//updateEntities();
 				//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 				hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 				maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -341,7 +341,7 @@ public class MainUI extends Stage {
 		//ACTION RANGE
 		
 		action_range = new TextField("", skin);
-		action_range.setMaxLength(2);
+		action_range.setMaxLength(1);
 		action_range.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 		ui_window.add(" Action Range: ");
 		ui_window.add(action_range).pad(5).row();
@@ -492,7 +492,7 @@ public class MainUI extends Stage {
 		
 		
 		//STOP TEMPORANEO
-		/*
+		
 		TextButton stop = new TextButton(" Stop Simulation ", skin);
 		ui_window.add(stop).pad(10).colspan(3);
 		
@@ -506,7 +506,7 @@ public class MainUI extends Stage {
 					}
 				}
 		);
-		*/
+		
 		
 		main_table = new Table(skin);
 		fps = new Label("FPS : ",skin);
@@ -545,19 +545,17 @@ public class MainUI extends Stage {
 	
 	private void updateEntities() 
 	{
-		
+		int max_fort_val = Mappone.MAX_POPULATION;
 		int view_val = Omino.RAGGIO_VISIVO;
 		float action_val = Omino.ACTION_DST;
-		int max_tribesmen = 0;
-		
 		try 
 		{
+			max_fort_val = Integer.parseInt(max_fort.getText());
 			view_val = Integer.parseInt(view_range.getText());
 			action_val = Integer.parseInt(action_range.getText());
-			max_tribesmen = Integer.parseInt(max_fort.getText());
 		}
 		catch(Exception ex) {}
-		
+		Mappone.MAX_POPULATION = max_fort_val;
 		Omino.RAGGIO_VISIVO =  view_val;
 		Omino.ACTION_DST = action_val;
 		
@@ -624,4 +622,8 @@ public class MainUI extends Stage {
 		fps.setText("FPS: "+Gdx.graphics.getFramesPerSecond());
 	}
 	
+	public void draw() {
+		super.draw();
+	}
+
 }

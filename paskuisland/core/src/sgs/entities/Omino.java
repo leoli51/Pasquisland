@@ -23,7 +23,7 @@ public class Omino extends Entity {
 	public static int RAGGIO_VISIVO = 4;
 	public static float ACTION_DST = 20;
 	public static float BLOCCO_INT = 2f;
-	public static float PREGNANCY = .1f;
+	//public static float PREGNANCY = .1f;
 	public static float HUNGER_PER_SECOND = .2f; // la fame arriva a 1 in 5 sec
 	public static float MATURITY = 17;
 	

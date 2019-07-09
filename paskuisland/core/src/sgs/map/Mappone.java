@@ -30,7 +30,6 @@ public class Mappone {
 
 	private static Mappone singleton;
 	
-	
 	private WorldMap map; // mappa con le grafiche e ti dice se � acqua o terra il terreno
 	private HashMap<GridPoint2, Array<Entity>> mappa_entita; // mappa 2d delle entita
 	private HashMap<String, Integer> population_count;
@@ -365,14 +364,17 @@ public class Mappone {
 	}
 	
 	private EntityProcessor getFreeProcessor() {
-		for (EntityProcessor check : processors)
-			if (!check.isFull())
-				return check;
+		synchronized(processors) {
+			for (EntityProcessor check : processors)
+				if (!check.isFull())
+					return check;
 		
-		EntityProcessor processor = new EntityProcessor();
-		processors.add(processor);
-		
-		return processor;
+			EntityProcessor processor = new EntityProcessor();
+			processors.add(processor);
+			
+			
+			return processor;
+		}
 	}
 
 }

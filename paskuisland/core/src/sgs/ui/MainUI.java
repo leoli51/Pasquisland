@@ -75,8 +75,7 @@ public class MainUI extends Stage {
 	private MultiSlider rept;
 
 
-	
-	private Graph pop_graph;
+	//private Graph pop_graph;
 	
 
 	public MainUI(Skin skin, Viewport viewport) {
@@ -492,7 +491,7 @@ public class MainUI extends Stage {
 		
 		
 		//STOP TEMPORANEO
-		
+		/*
 		TextButton stop = new TextButton(" Stop Simulation ", skin);
 		ui_window.add(stop).pad(10).colspan(3);
 		
@@ -506,7 +505,7 @@ public class MainUI extends Stage {
 					}
 				}
 		);
-		
+		*/
 		
 		main_table = new Table(skin);
 		fps = new Label("FPS : ",skin);
@@ -584,9 +583,11 @@ public class MainUI extends Stage {
 	}
 	
 	private void startSimulation() {
-		ui_window.getTitleLabel().setText("SIMULATION");
-		ui_window.clear();
 		
+		ui_window.clear();
+		main_table.clear();
+		
+		ui_window = new Window("SETTINGS", skin);
 		ui_window.setResizable(true);
 		ui_window.setPosition(getWidth(), getHeight());
 		ui_window.setSize(getWidth()/3, getHeight());
@@ -597,16 +598,33 @@ public class MainUI extends Stage {
 		    }
 		});
 		
+		ui_window.getTitleLabel().setText("SIMULATION");
 		
-		pop_graph = new Graph(skin, "population", "time");
-		TextButton stop = new TextButton(" Stop Simulation ", skin);
 		
-		ui_window.add(pop_graph).row();
-		ui_window.add(stop).pad(10).colspan(3);
+		Graph pop_graph = new Graph(this.skin, "population", "time");
+		TextButton stop = new TextButton(" Stop Simulation ", this.skin);
+		
 		
 		stop.addListener(new ChangeListener() {public void changed (ChangeEvent event, Actor actor) {ui_window.clear();stopSimulation();}});
 		
+		
+		ui_window.add(pop_graph).row();
+		ui_window.add(stop);
+		
+		main_table = new Table(skin);
+		fps = new Label("FPS : ",skin);
+		
+		main_table.add(fps).left().top().expand();
+		main_table.setFillParent(true);
+		main_table.validate();
+		main_table.layout();
+		addActor(main_table);
+		addActor(ui_window);
+		setDebugAll(true);
+		
+		
 		((Pasquisland) Gdx.app.getApplicationListener()).startSimulation();
+		
 	};
 	
 	private void stopSimulation() {

@@ -35,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 import sgs.entities.Omino;
 import sgs.entities.Palma;
+import sgs.map.Mappone;
 import sgs.map.WorldMap;
 import sgs.pasquisland.Pasquisland;
 import sgs.ui.MultiSlider.MultiSliderStyle;
@@ -128,7 +129,7 @@ public class MainUI extends Stage {
 					
 					max_fort.setText(r.nextInt(999)+"");//updateEntities();
 					view_range.setText(r.nextInt(9)+"");//updateEntities();
-					action_range.setText(r.nextInt(9)+"");//updateEntities();
+					action_range.setText(r.nextInt(9)+10+"");//updateEntities();
 					//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 					hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 					maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -304,9 +305,9 @@ public class MainUI extends Stage {
 			{
 				Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
 				
-				max_fort.setText(r.nextInt(999)+"");//updateEntities();
-				view_range.setText(r.nextInt(9)+"");//updateEntities();
-				action_range.setText(r.nextInt(9)+"");//updateEntities();
+				max_fort.setText(r.nextInt(900)+100+"");//updateEntities();
+				view_range.setText(r.nextInt(7)+3+"");//updateEntities();
+				action_range.setText(r.nextInt(9)+10+"");//updateEntities();
 				//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 				hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 				maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -340,7 +341,7 @@ public class MainUI extends Stage {
 		//ACTION RANGE
 		
 		action_range = new TextField("", skin);
-		action_range.setMaxLength(1);
+		action_range.setMaxLength(2);
 		action_range.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 		ui_window.add(" Action Range: ");
 		ui_window.add(action_range).pad(5).row();
@@ -547,12 +548,16 @@ public class MainUI extends Stage {
 		
 		int view_val = Omino.RAGGIO_VISIVO;
 		float action_val = Omino.ACTION_DST;
+		int max_tribesmen = 0;
+		
 		try 
 		{
 			view_val = Integer.parseInt(view_range.getText());
 			action_val = Integer.parseInt(action_range.getText());
+			max_tribesmen = Integer.parseInt(max_fort.getText());
 		}
 		catch(Exception ex) {}
+		
 		Omino.RAGGIO_VISIVO =  view_val;
 		Omino.ACTION_DST = action_val;
 		
@@ -619,8 +624,4 @@ public class MainUI extends Stage {
 		fps.setText("FPS: "+Gdx.graphics.getFramesPerSecond());
 	}
 	
-	public void draw() {
-		super.draw();
-	}
-
 }

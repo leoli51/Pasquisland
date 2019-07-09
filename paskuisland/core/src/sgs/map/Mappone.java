@@ -59,6 +59,8 @@ public class Mappone {
 		for (Entity e : crepate)
 			chiCeStaQua(e.gridposition).removeValue(e, true);
 		crepate.clear();
+		
+		Gdx.app.log("BM", "Omini : "+da_aggiornare.size);
 	}
 
 	public void disegnaTutto(SpriteBatch batch, ShapeRenderer sr, int[] che_se_vede) {

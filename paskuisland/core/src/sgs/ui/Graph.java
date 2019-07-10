@@ -80,10 +80,10 @@ public class Graph extends Table {
 	}
 		
 	public void draw(Batch batch, float palpha) {
+		super.draw(batch, palpha);
 		sr.setProjectionMatrix(getStage().getCamera().combined);
 		drawGraphLines(sr);
 	}
-	
 	
 	private void drawGraphLines(ShapeRenderer sr) {	
 		sr.begin(ShapeType.Filled);

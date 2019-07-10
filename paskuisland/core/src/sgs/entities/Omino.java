@@ -18,6 +18,8 @@ import sgs.utils.Tuple;
 
 public class Omino extends Entity {
 	
+	public static final float MAX_LIFE = 20;
+
 	private static Random random;
 	
 	public static int RAGGIO_VISIVO = 4;
@@ -51,7 +53,7 @@ public class Omino extends Entity {
 		setValues(random.nextFloat(),random.nextFloat(),random.nextInt((int) (MAX_SPEED - MIN_SPEED))+MIN_SPEED);
 		
 		this.hunger = 0f; 	
-		life = 15;
+		life = MAX_LIFE;
 		UltimiInc = new Array<Tuple<Entity,Float>>();
 		toRemove = new Array<Tuple<Entity,Float>>();
 		//wait_for_next_child = 0;
@@ -62,7 +64,7 @@ public class Omino extends Entity {
 		  this.sociality =  sociality;
 		  this.speed =  speed;
 		  tribu = dammiTribu();
-		  life = 20;
+		  life = MAX_LIFE;
 	  }
 	  
 	

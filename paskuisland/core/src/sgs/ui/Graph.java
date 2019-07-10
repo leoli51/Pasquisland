@@ -85,7 +85,6 @@ public class Graph extends Table {
 		drawGraphLines(sr);
 	}
 	
-	
 	private void drawGraphLines(ShapeRenderer sr) {	
 		sr.begin(ShapeType.Filled);
 		sr.setColor(graph_bg_col);
@@ -108,8 +107,8 @@ public class Graph extends Table {
 			sr.setColor(Color.RED);
 			sr.polyline(verts);
 		}
-		sr.end();
 		
+		sr.end();
 	}
 	
 	public void addAllPoints(Array<Vector2> npoints) 

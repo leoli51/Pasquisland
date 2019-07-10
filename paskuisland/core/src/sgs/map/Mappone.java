@@ -4,8 +4,8 @@ package sgs.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -37,8 +37,8 @@ public class Mappone {
 	
 	private ArrayList<EntityProcessor> processors;
 	private Array<Entity> to_add;
-	//private ScheduledExecutorService executor;
-	private ExecutorService executor;
+	private ScheduledExecutorService executor;
+	//private ExecutorService executor;
 
 	private Array<Entity> selected_entities;
 	
@@ -63,8 +63,8 @@ public class Mappone {
 		
 		population_count = new HashMap<String, Integer>();
 		
-		//executor = Executors.newScheduledThreadPool(64);
-		executor = Executors.newCachedThreadPool();
+		executor = Executors.newScheduledThreadPool(64);
+		//executor = Executors.newCachedThreadPool();
 
 	}
 	

@@ -82,12 +82,12 @@ public class SettingsUI extends Table {
 					//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 					hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 					maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
-					strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
-					strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
-					sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
-					sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
-					speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
-					speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
+					//strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
+					//strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
+					//sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
+					//sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
+					//speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
+					//speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
 					
 					min_palme_rep.setText(r.nextInt(4)+"");
 					max_palme_rep.setText(r.nextInt(99)+"");
@@ -260,12 +260,12 @@ public class SettingsUI extends Table {
 				//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 				hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 				maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
-				strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
-				strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
-				sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
-				sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
-				speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
-				speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
+				//strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
+				//strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
+				//sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
+				//sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
+				//speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
+				//speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
 				
 			}
 		});

@@ -83,7 +83,7 @@ public class MainUI extends Stage {
 		main_table.layout();
 		addActor(main_table);
 		addActor(ui_window);
-		setDebugAll(true);
+		setDebugAll(false);
 	}
 	
 	private void startSimulation() {

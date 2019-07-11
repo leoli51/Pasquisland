@@ -280,20 +280,10 @@ public class Mappone {
 	}
 	
 	public void spawnaBimbo(Omino genitore1, Omino genitore2) {
-		Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
-		int r1= r.nextInt(2);
-		if(r1==0) {
-			posRandom newpos= posizioneIntorno(genitore1.gridposition);
-			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
-			waitToBeRegistered(bimbo);
-			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
-		}
-		else {
-			posRandom newpos= posizioneIntorno(genitore2.gridposition);
-			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
-			waitToBeRegistered(bimbo);
-			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
-		}
+		posRandom newpos= posizioneIntorno(genitore1.gridposition);
+		Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
+		assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
+		waitToBeRegistered(bimbo);
 	}
 	
 	private void assegnaNuoviValoriAlBimbo(Omino genitore1, Omino genitore2, Omino bimbo) {
@@ -358,6 +348,7 @@ public class Mappone {
 			synchronized(population_count) {
 				int tribe_index = Omino.getTribuIndex(((Omino) entity).tribu);
 				if (population_count[tribe_index] < MAX_POPULATION) {
+					population_count[tribe_index] ++;
 					to_add.add(entity);
 				}
 			}
@@ -375,7 +366,7 @@ public class Mappone {
 					population_count.put(((Omino) entity).tribu, population_count.getOrDefault(((Omino) entity).tribu, 0) + 1);
 				}*/
 				int tribe_index = Omino.getTribuIndex(((Omino) entity).tribu);
-				population_count[tribe_index] ++;
+				//population_count[tribe_index] ++;
 			}
 				//else 
 					//Gdx.app.log("tribesmen limit", "too many tribesmen of tribe : "+((Omino) entity).tribu+ " count: "+ population_count.getOrDefault(((Omino) entity).tribu, 0));
@@ -411,3 +402,4 @@ public class Mappone {
 	}
 
 }
+

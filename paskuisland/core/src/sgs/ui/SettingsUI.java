@@ -76,18 +76,18 @@ public class SettingsUI extends Table {
 					palme.setValue((r.nextFloat()*(palme.getMaxValue())+palme.getMinValue()));
 					updateSpawn();
 					
-					max_fort.setText(r.nextInt(999)+"");//updateEntities();
-					view_range.setText(r.nextInt(20)+"");//updateEntities();
+					max_fort.setText(r.nextInt(3000)+"");//updateEntities();
+					view_range.setText(r.nextInt(10)+"");//updateEntities();
 					//action_range.setText(r.nextInt(9)+"");//updateEntities();
 					//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 					hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 					maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
-					strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
-					strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
-					sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
-					sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
-					speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
-					speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
+					//strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
+					//strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
+					//sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
+					//sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
+					//speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
+					//speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
 					
 					min_palme_rep.setText(r.nextInt(4)+"");
 					max_palme_rep.setText(r.nextInt(99)+"");
@@ -254,18 +254,18 @@ public class SettingsUI extends Table {
 			{
 				Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
 				
-				max_fort.setText(r.nextInt(999)+"");//updateEntities();
-				view_range.setText(r.nextInt(20)+"");//updateEntities();
+				max_fort.setText(r.nextInt(3000)+"");//updateEntities();
+				view_range.setText(r.nextInt(10)+"");//updateEntities();
 				//action_range.setText(r.nextInt(9)+"");//updateEntities();
 				//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 				hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 				maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
-				strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
-				strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
-				sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
-				sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
-				speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
-				speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
+				//strenght.setValue(0, (r.nextFloat()*(strenght.knobsPositions[1])+strenght.getMinValue()));
+				//strenght.setValue(1, (r.nextFloat()*(strenght.getMaxValue())+strenght.knobsPositions[0]));
+				//sociality.setValue(0, (r.nextFloat()*(sociality.knobsPositions[1])+sociality.getMinValue()));
+				//sociality.setValue(1, (r.nextFloat()*(sociality.getMaxValue())+sociality.knobsPositions[0]));
+				//speed.setValue(0, (r.nextFloat()*(speed.knobsPositions[1])+speed.getMinValue()));
+				//speed.setValue(1, (r.nextFloat()*(speed.getMaxValue())+speed.knobsPositions[0]));
 				
 			}
 		});
@@ -274,7 +274,7 @@ public class SettingsUI extends Table {
 		//MAX FOR TRIBE
 		
 		max_fort = new TextField("", skin);
-		max_fort.setMaxLength(3);
+		max_fort.setMaxLength(4);
 		max_fort.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 		this.add(" Max tribesmen for tribe: ");
 		this.add(max_fort).pad(5).row();
@@ -324,7 +324,7 @@ public class SettingsUI extends Table {
 		//REPRODUCTIVE AGE
 		
 		maturity = new Slider(0,Omino.MAX_LIFE,.5f, false, skin);
-		maturity.setValue(.1f);
+		maturity.setValue(17);
 		this.add(" Reproductive Age ");
 		this.add(maturity).colspan(2).row();
 		

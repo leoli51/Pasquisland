@@ -18,7 +18,7 @@ public class Palma extends Entity{
 	public static float MIN_REPRODUCTION_TIME = .5f;
 	public static float MAX_REPRODUCTION_TIME = 1f;
 
-	public static Texture texture = new Texture(Gdx.files.internal("cespuglio.png"));
+	public static Texture texture = new Texture(Gdx.files.internal("bossPalmetta.png"));
 	
 	private float reproduction_interval;
 	private float my_time;
@@ -31,7 +31,7 @@ public class Palma extends Entity{
 		my_time = 0;
 	}
 	public void disegnami(SpriteBatch batch) {
-		batch.draw(texture, position.x, position.y, 32, 32);
+		batch.draw(texture, position.x, position.y, 50, 50);
 	}
 	
 	public void update(float delta) {

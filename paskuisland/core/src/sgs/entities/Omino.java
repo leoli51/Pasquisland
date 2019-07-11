@@ -59,8 +59,31 @@ public class Omino extends Entity {
 		return i;
 	}
 	
-	public static Texture texture = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
-	  
+	public static Color getTribuColor(String tribu) {
+		float[] rgb = new float[3];
+		int curr_col = 0;
+		for (char c : tribu.toCharArray()) {
+			switch (c) {
+			case 'a':
+				rgb[curr_col] = 1;
+				break;
+			case 'b':
+				rgb[curr_col] = 0.5f;
+				break;
+			case 'c':
+				rgb[curr_col] = 0;
+				break;
+			}
+			
+			curr_col++;
+		}
+		
+		return new Color(rgb[0], rgb[1], rgb[2], 1);
+	}
+	
+	public static Texture moai = new Texture(Gdx.files.internal("moai.png"));
+	public static Texture machoMan = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
+		  
 	  public float strength; 
 	  public float speed;
 	  public float hunger; 
@@ -133,11 +156,16 @@ public class Omino extends Entity {
 		}
 		
 		batch.setColor(rgb[0], rgb[1], rgb[2], 1);
+		
 	}
 
 	public void disegnami(SpriteBatch batch) {
 		setTribuColor(batch);
-		batch.draw(texture, position.x, position.y, 32, 40);
+		if (life > MATURITY) {
+			batch.draw(moai, position.x, position.y, 32, 32);
+		}
+		else
+			batch.draw(machoMan, position.x, position.y, 42, 50);
 		batch.setColor(Color.WHITE);
 	}
 	
@@ -272,7 +300,7 @@ public class Omino extends Entity {
 		if (position.dst(Obiettivo.position) < ACTION_DST)
         	cheStamoAFa();
 		
-		hunger = Math.min(hunger+delta*HUNGER_PER_SECOND, 1);
+		hunger = Math.min(Math.max(hunger + (this.speed*this.strength/600)*HUNGER_PER_SECOND, hunger+delta*HUNGER_PER_SECOND), 1);
 		life -= /*delta +*/ delta * hunger;
 		//wait_for_next_child -= delta;
 	}

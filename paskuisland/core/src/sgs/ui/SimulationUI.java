@@ -57,7 +57,7 @@ public class SimulationUI extends Table {
 		pop_images = new Image[27];
 		
 		for (int i = 0; i < 27; i++) {
-			pop_names[i] = new Label(Omino.NOMI_TRIBU[i], skin);
+			pop_names[i] = new Label(Omino.NOMI_CASATE[i], skin);
 			pop_counts[i] = new Label(Mappone.getInstance().getTribePopulationCounter()[i]+ "", skin);
 			pop_images[i] = new Image();
 			pop_images[i].setDrawable(new TextureRegionDrawable(Omino.moai));

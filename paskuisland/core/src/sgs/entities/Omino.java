@@ -33,8 +33,8 @@ public class Omino extends Entity {
 	public static float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
 	public static float MIN_SPEED = 32, MAX_SPEED = 96;
 	
-	public static final String[] NOMI_CASATE = {};
 	public static final String[] NOMI_TRIBU = {"ccc", "ccb", "cca", "cbc", "cbb", "cba", "cac", "cab", "caa", "bcc", "bcb", "bca", "bbc", "bbb", "bba", "bac", "bab", "baa", "acc", "acb", "aca", "abc", "abb", "aba", "aac", "aab", "aaa"};
+	public static final String[] NOMI_CASATE = {"Casa Stark", "Casa Lannister", "Casa Baratheon", "Casa Targaryen", "Casa Greyjoy", "Casa Tyrell", "Casa Tully", "Casa Frey", "Casa Bolton", "Casa Martell", "Casa Arryn", "Casa Mormont", "Casa Tarly", "Casa Clegane", "Casa Glover", "Casa Manderly", "Casa Umber", "Casa Whitehill", "Casa Greywood", "Casa Karstark", "Casa Moss", "Casa Thenn", "Estranei", "Bruti", "Dothraki", "Immacolati", "Secondi figli"};
 	
 	public static int getTribuIndex(String tribu) {
 		int i = 0;

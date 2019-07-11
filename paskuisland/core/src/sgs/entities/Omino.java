@@ -2,14 +2,13 @@ package sgs.entities;
 
 
 import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Queue;
 
 import sgs.map.Mappone;
 import sgs.map.WorldMap;
@@ -33,6 +32,32 @@ public class Omino extends Entity {
 	public static float MIN_STRENGTH = 0, MAX_STRENGTH = 1;
 	public static float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
 	public static float MIN_SPEED = 32, MAX_SPEED = 96;
+	
+	public static final String[] NOMI_CASATE = {};
+	public static final String[] NOMI_TRIBU = {"ccc", "ccb", "cca", "cbc", "cbb", "cba", "cac", "cab", "caa", "bcc", "bcb", "bca", "bbc", "bbb", "bba", "bac", "bab", "baa", "acc", "acb", "aca", "abc", "abb", "aba", "aac", "aab", "aaa"};
+	
+	public static int getTribuIndex(String tribu) {
+		int i = 0;
+		int pow = 2;
+		for (char c : tribu.toCharArray()) {
+			int val = 0;
+			switch(c) {
+			case 'a':
+				val = 2;
+				break;
+			case 'b':
+				val = 1;
+				break;
+			case 'c':
+				val = 0;
+				break;
+			}
+			i += Math.pow(3, pow) * val;
+			--pow;
+		}
+		
+		return i;
+	}
 	
 	public static Texture texture = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
 	  

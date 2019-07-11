@@ -40,6 +40,12 @@ public class Pasquisland extends ApplicationAdapter {
 	
 	Random random;
 	
+	//PAuse resume skip
+	boolean paused;
+	boolean skipping;
+	
+	int frames_to_skip;
+	
 	public static float oratio;
 	public static float pratio;
 	
@@ -82,7 +88,22 @@ public class Pasquisland extends ApplicationAdapter {
 		Gdx.gl.glClearColor(.8f, .8f, .8f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		mappone.aggiorna(Gdx.graphics.getDeltaTime());
+		if (!paused) {
+			if (skipping) {
+				if (frames_to_skip > 0) {
+					frames_to_skip --;
+					mappone.aggiorna(Gdx.graphics.getDeltaTime());
+				}
+				else {
+					skipping = false;
+					paused = true;
+				}
+			}
+			else {
+				mappone.aggiorna(Gdx.graphics.getDeltaTime());
+			}
+		}
+		
 		cam_mov.update();
 		batch.setProjectionMatrix(camera.combined);
 		rend.setProjectionMatrix(camera.combined);
@@ -118,11 +139,28 @@ public class Pasquisland extends ApplicationAdapter {
 		return random;
 	}
 	public void startSimulation() {
+		paused = false;
+		frames_to_skip = 0;
+		skipping = false;
 		mappone.spammaOmini(oratio);
 		mappone.spammaPalme(pratio);
 	}
 	
 	public void stopSimulation() {
 		mappone.ammazzaOmini();
+	}
+	
+	public void pauseSimulation() {
+		paused = true;
+	}
+	
+	public void resumeSimulation() {
+		paused = false;
+	}
+	
+	public void skipNFrames(int n) {
+		frames_to_skip = n;
+		skipping = true;
+		paused = false;
 	}
 }

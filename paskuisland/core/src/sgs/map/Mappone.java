@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -33,7 +32,8 @@ public class Mappone {
 	
 	private WorldMap map; // mappa con le grafiche e ti dice se � acqua o terra il terreno
 	private HashMap<GridPoint2, Array<Entity>> mappa_entita; // mappa 2d delle entita
-	private HashMap<String, Integer> population_count;
+	//private HashMap<String, Integer> population_count;
+	private int[] population_count;
 	public static int MAX_POPULATION = 1000;
 	
 	private ArrayList<EntityProcessor> processors;
@@ -43,6 +43,8 @@ public class Mappone {
 	private Array<Entity> selected_entities;
 	
 	private int selected = 0;
+	
+	private int total_entities = 0;
 
 	private Mappone(int map_width, int map_height) {
 		float[] terrain_values = new float[3];
@@ -61,15 +63,18 @@ public class Mappone {
 		processors = new ArrayList<EntityProcessor>();
 		to_add = new Array<Entity>();
 		
-		population_count = new HashMap<String, Integer>();
+		//population_count = new HashMap<String, Integer>();
+		population_count = new int[27];
+		for (int i = 0; i < 27; i++)
+			population_count[i] = 0;
 		
 		executor = Executors.newScheduledThreadPool(64);
 	}
 	
 	public void aggiorna(float delta) {
-		int pop_count = 0;
+		total_entities = 0;
 		for (int i = 0; i < processors.size(); i++) {
-			pop_count += processors.get(i).getEntities().size;
+			total_entities += processors.get(i).getEntities().size;
 			//executor.execute(processors.get(i));
 		}
 		
@@ -89,7 +94,7 @@ public class Mappone {
 		to_add.clear();
 		
 		
-		Gdx.app.log("MIM", pop_count + " OMINI, " + processors.size() + " Entity processors");
+		//Gdx.app.log("MIM", pop_count + " OMINI, " + processors.size() + " Entity processors");
 		
 	}
 	
@@ -204,7 +209,9 @@ public class Mappone {
 			ep.getEntities().clear();
 		}
 		
-		population_count.clear();
+		//population_count.clear();
+		for (int i = 0; i < 27; i++)
+			population_count[i] = 0;
 	}
 	
 
@@ -281,7 +288,7 @@ public class Mappone {
 			waitToBeRegistered(bimbo);
 			assegnaNuoviValoriAlBimbo(genitore1, genitore2, bimbo);
 		}
-		else if(r1==1){
+		else {
 			posRandom newpos= posizioneIntorno(genitore2.gridposition);
 			Omino bimbo= new Omino(newpos.gridposition.x*WorldMap.tile_size,newpos.gridposition.y*WorldMap.tile_size);
 			waitToBeRegistered(bimbo);
@@ -329,7 +336,15 @@ public class Mappone {
 		}
 	}
 	
-	public HashMap<String, Integer> getPopulationCountDictionary() {
+	/*public HashMap<String, Integer> getPopulationCountDictionary() {
+		return population_count;
+	}*/
+	
+	public int getTotalEntities() {
+		return total_entities;
+	}
+	
+	public int[] getTribePopulationCounter() {
 		return population_count;
 	}
 	
@@ -340,12 +355,12 @@ public class Mappone {
 	 */
 	private void waitToBeRegistered(Entity entity) {
 		if (entity instanceof Omino) {
-			if (population_count.getOrDefault(((Omino) entity).tribu, 0) < MAX_POPULATION) {
-				to_add.add(entity);
-				population_count.put(((Omino) entity).tribu, population_count.getOrDefault(((Omino) entity).tribu, 0) + 1);
+			synchronized(population_count) {
+				int tribe_index = Omino.getTribuIndex(((Omino) entity).tribu);
+				if (population_count[tribe_index] < MAX_POPULATION) {
+					to_add.add(entity);
+				}
 			}
-			else 
-				Gdx.app.log("tribesmen limit", "too many tribesmen of tribe : "+((Omino) entity).tribu+ " count: "+ population_count.getOrDefault(((Omino) entity).tribu, 0));
 		}
 		else {
 			to_add.add(entity);
@@ -353,6 +368,20 @@ public class Mappone {
 	}
 	
 	private void registerEntity(Entity entity) {
+		if (entity instanceof Omino) {
+			synchronized(population_count) {
+				/*if (population_count.getOrDefault(((Omino) entity).tribu, 0) < MAX_POPULATION) {
+					to_add.add(entity);
+					population_count.put(((Omino) entity).tribu, population_count.getOrDefault(((Omino) entity).tribu, 0) + 1);
+				}*/
+				int tribe_index = Omino.getTribuIndex(((Omino) entity).tribu);
+				population_count[tribe_index] ++;
+			}
+				//else 
+					//Gdx.app.log("tribesmen limit", "too many tribesmen of tribe : "+((Omino) entity).tribu+ " count: "+ population_count.getOrDefault(((Omino) entity).tribu, 0));
+					//Gdx.app.log("tribesmen limit", "too many tribesmen of tribe : "+((Omino) entity).tribu+ " count: "+population_count[tribe_index]);
+			//}
+		}
 		getFreeProcessor().addEntity(entity);
 		synchronized(chiCeStaQua(entity.gridposition)) {
 			chiCeStaQua(entity.gridposition).add(entity);

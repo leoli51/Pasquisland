@@ -21,28 +21,38 @@ public class EntityProcessor implements Callable<Boolean> {
 
 	@Override
 	public Boolean call() {
-		for (Entity entity : da_aggiornare) {
-			entity.update(Gdx.graphics.getRawDeltaTime());
-			if (entity.life <= 0)
-				crepate.add(entity);
-		}
-		
 		synchronized(da_aggiornare) {
+			for (Entity entity : da_aggiornare) {
+				entity.update(Gdx.graphics.getRawDeltaTime());
+				if (entity.life <= 0)
+					crepate.add(entity);
+			}
+			
+		
 			da_aggiornare.removeAll(crepate, true);
 		}
-		for (Entity entity : crepate) {
-			synchronized(Mappone.getInstance().chiCeStaQua(entity.gridposition)) {
-				Mappone.getInstance().chiCeStaQua(entity.gridposition).removeValue(entity, true);
-			}
-			if (entity instanceof Omino) {
-				synchronized(Mappone.getInstance().getPopulationCountDictionary()) {
-					Mappone.getInstance().getPopulationCountDictionary().put(((Omino) entity).tribu, 
-							Mappone.getInstance().getPopulationCountDictionary().get(((Omino) entity).tribu) - 1);
+		
+		synchronized(crepate) {
+			for (Entity entity : crepate) {
+				synchronized(Mappone.getInstance().chiCeStaQua(entity.gridposition)) {
+					Mappone.getInstance().chiCeStaQua(entity.gridposition).removeValue(entity, true);
+				}
+				if (entity instanceof Omino) {
+					/*synchronized(Mappone.getInstance().getPopulationCountDictionary()) {
+						Mappone.getInstance().getPopulationCountDictionary().put(((Omino) entity).tribu, 
+								Mappone.getInstance().getPopulationCountDictionary().getOrDefault((((Omino) entity).tribu),0) - 1);
+					}*/
+					synchronized (Mappone.getInstance().getTribePopulationCounter()) {
+						//Gdx.app.log("ec", Thread.currentThread().getName() + " " +crepate.size+" "+((Omino)entity).tribu);
+						//if (Mappone.getInstance().getTribePopulationCounter()[Omino.getTribuIndex(((Omino) entity).tribu)] > 0)
+						Mappone.getInstance().getTribePopulationCounter()[Omino.getTribuIndex(((Omino) entity).tribu)] --;
+					}
 				}
 			}
+			
+			crepate.clear();
+			//Gdx.app.log("ec", Thread.currentThread().getName() + " " +crepate.size);
 		}
-		
-		crepate.clear();
 		
 		return true;
 	}

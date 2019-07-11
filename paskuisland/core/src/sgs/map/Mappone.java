@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -38,8 +39,7 @@ public class Mappone {
 	private ArrayList<EntityProcessor> processors;
 	private Array<Entity> to_add;
 	private ScheduledExecutorService executor;
-	//private ExecutorService executor;
-
+	
 	private Array<Entity> selected_entities;
 	
 	private int selected = 0;
@@ -64,8 +64,6 @@ public class Mappone {
 		population_count = new HashMap<String, Integer>();
 		
 		executor = Executors.newScheduledThreadPool(64);
-		//executor = Executors.newCachedThreadPool();
-
 	}
 	
 	public void aggiorna(float delta) {
@@ -74,6 +72,7 @@ public class Mappone {
 			pop_count += processors.get(i).getEntities().size;
 			//executor.execute(processors.get(i));
 		}
+		
 		
 		synchronized(processors) {
 			try {
@@ -90,8 +89,10 @@ public class Mappone {
 		to_add.clear();
 		
 		
-		Gdx.app.log("MIM", pop_count + " OMINI, "+processors.size()+" Entity processors");
+		Gdx.app.log("MIM", pop_count + " OMINI, " + processors.size() + " Entity processors");
+		
 	}
+	
 
 	public void disegnaTutto(SpriteBatch batch, ShapeRenderer sr, int[] che_se_vede) {
 		disegnaMappetta(sr, che_se_vede);

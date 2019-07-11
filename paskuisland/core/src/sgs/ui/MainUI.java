@@ -51,6 +51,8 @@ public class MainUI extends Stage {
 	private TextButton start;
 	private TextButton stop;
 	
+	//private Label population;
+	
 	private Label fps;
 		
 	private Skin skin;
@@ -88,13 +90,12 @@ public class MainUI extends Stage {
 		ui_window.add(settings).row();
 		
 		start = new TextButton(" Start Simulation ", skin);
-		start.addListener(new ChangeListener() {public void changed (ChangeEvent event, Actor actor) {startSimulation();}});
 		ui_window.add(start).pad(10).colspan(3).row();
 		
 		simulation = new SimulationUI(skin);
 		stop = new TextButton(" Stop Simulation ", this.skin);
 		stop.addListener(new ChangeListener() {public void changed (ChangeEvent event, Actor actor) {stopSimulation();}});
-		
+		start.addListener(new ChangeListener() {public void changed (ChangeEvent event, Actor actor) {startSimulation();}});
 		
 		main_table = new Table(skin);
 		fps = new Label("FPS : ",skin);
@@ -108,18 +109,20 @@ public class MainUI extends Stage {
 		setDebugAll(true);
 	}
 	
-	
-	
 	private void startSimulation() {
 		ui_window.getTitleLabel().setText("SIMULATION");
 		
 		ui_window.clearChildren();
-		ui_window.add(simulation).row();
-		ui_window.add(stop).row();
 		
+		ui_window.add(simulation).top().expand().row();
+		ui_window.add(stop).pad(10).row();
+	
 		((Pasquisland) Gdx.app.getApplicationListener()).startSimulation();
 		
+		
 	};
+	
+	//F
 	
 	private void stopSimulation() {
 		ui_window.getTitleLabel().setText("SETTINGS");
@@ -132,8 +135,8 @@ public class MainUI extends Stage {
 	@Override
 	public void act() {
 		super.act();
-		fps.setText("FPS: "+Gdx.graphics.getFramesPerSecond());
-	}
+		fps.setText("FPS: "+Gdx.graphics.getFramesPerSecond());		
+		}
 	
 	public void draw() {
 		super.draw();

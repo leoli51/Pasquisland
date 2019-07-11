@@ -34,7 +34,7 @@ public class Omino extends Entity {
 	public static float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
 	public static float MIN_SPEED = 32, MAX_SPEED = 96;
 	
-	public static Texture texture = new Texture(Gdx.files.internal("spy.png"));
+	public static Texture texture = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
 	  
 	  public float strength; 
 	  public float speed;
@@ -112,7 +112,7 @@ public class Omino extends Entity {
 
 	public void disegnami(SpriteBatch batch) {
 		setTribuColor(batch);
-		batch.draw(texture, position.x, position.y);
+		batch.draw(texture, position.x, position.y, 32, 40);
 		batch.setColor(Color.WHITE);
 	}
 	

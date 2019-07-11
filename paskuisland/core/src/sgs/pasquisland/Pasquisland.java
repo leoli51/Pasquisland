@@ -83,7 +83,6 @@ public class Pasquisland extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		mappone.aggiorna(Gdx.graphics.getDeltaTime());
-		
 		cam_mov.update();
 		batch.setProjectionMatrix(camera.combined);
 		rend.setProjectionMatrix(camera.combined);

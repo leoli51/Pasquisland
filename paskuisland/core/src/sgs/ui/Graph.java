@@ -1,10 +1,10 @@
 package sgs.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.MathUtils;
 import com.kotcrab.vis.ui.building.utilities.Alignment;
 
 public class Graph extends Table {
@@ -78,7 +79,6 @@ public class Graph extends Table {
 		updateGraph();
 	}
 		
-	@Override
 	public void draw(Batch batch, float palpha) {
 		super.draw(batch, palpha);
 		sr.setProjectionMatrix(getStage().getCamera().combined);
@@ -107,8 +107,8 @@ public class Graph extends Table {
 			sr.setColor(Color.RED);
 			sr.polyline(verts);
 		}
-		
 		sr.end();
+		
 	}
 	
 	public void addAllPoints(Array<Vector2> npoints) 

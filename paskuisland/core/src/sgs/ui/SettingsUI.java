@@ -40,7 +40,7 @@ public class SettingsUI extends Table {
 	//OMINI
 	private TextField max_fort;
 	private TextField view_range;
-	private TextField action_range;
+	//private TextField action_range;
 	private Slider hunger;
 	private Slider maturity;
 	private MultiSlider strenght;
@@ -77,8 +77,8 @@ public class SettingsUI extends Table {
 					updateSpawn();
 					
 					max_fort.setText(r.nextInt(999)+"");//updateEntities();
-					view_range.setText(r.nextInt(9)+"");//updateEntities();
-					action_range.setText(r.nextInt(9)+"");//updateEntities();
+					view_range.setText(r.nextInt(20)+"");//updateEntities();
+					//action_range.setText(r.nextInt(9)+"");//updateEntities();
 					//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 					hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 					maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -255,8 +255,8 @@ public class SettingsUI extends Table {
 				Random r = ((Pasquisland) Gdx.app.getApplicationListener()).getRandom();
 				
 				max_fort.setText(r.nextInt(999)+"");//updateEntities();
-				view_range.setText(r.nextInt(9)+"");//updateEntities();
-				action_range.setText(r.nextInt(9)+"");//updateEntities();
+				view_range.setText(r.nextInt(20)+"");//updateEntities();
+				//action_range.setText(r.nextInt(9)+"");//updateEntities();
 				//pregnancy.setText(r.nextInt(99)+"");//updateEntities();
 				hunger.setValue((r.nextFloat()*(hunger.getMaxValue())+hunger.getMinValue()));//updateEntities();
 				maturity.setValue((r.nextFloat()*(maturity.getMaxValue())+maturity.getMinValue()));//updateEntities();
@@ -282,19 +282,19 @@ public class SettingsUI extends Table {
 		//VIEW RANGE
 		
 		view_range = new TextField("", skin);
-		view_range.setMaxLength(1);
+		view_range.setMaxLength(2);
 		view_range.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 		this.add(" View Range: ");
 		this.add(view_range).pad(5).row();
 		
 		//ACTION RANGE
-		
+		/*
 		action_range = new TextField("", skin);
 		action_range.setMaxLength(1);
 		action_range.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 		this.add(" Action Range: ");
 		this.add(action_range).pad(5).row();
-		
+		*/
 		//PREGNANCY
 		/*
 		pregnancy = new TextField("", skin);
@@ -321,11 +321,11 @@ public class SettingsUI extends Table {
 		*/
 		
 		
-		//MATURITY
+		//REPRODUCTIVE AGE
 		
 		maturity = new Slider(0,Omino.MAX_LIFE,.5f, false, skin);
 		maturity.setValue(.1f);
-		this.add(" Maturity ");
+		this.add(" Reproductive Age ");
 		this.add(maturity).colspan(2).row();
 		
 		
@@ -334,19 +334,25 @@ public class SettingsUI extends Table {
 		//STRENGHT (slider 0<x<1) OPPURE DIRETTAMENTE INSERIRE MAX STRENGHT E MIN STRENGHT
 		
 		strenght = new MultiSlider(2, 0, .45f, .005f, false, new MultiSliderStyle(skin.get("default-horizontal", SliderStyle.class)));
-		this.add(" Strenght: ");
+		strenght.setValue(0, strenght.getMinValue());
+		strenght.setValue(1, strenght.getMaxValue());
+		this.add(" Strenght ");
 		this.add(strenght).colspan(2).row();
 		
 		//SOCIALITY (slider 0<x<1)
 
 		sociality = new MultiSlider(2, 0, .45f, .005f, false, new MultiSliderStyle(skin.get("default-horizontal", SliderStyle.class)));
-		this.add(" Sociality: ");
+		sociality.setValue(0, sociality.getMinValue());
+		sociality.setValue(1, sociality.getMaxValue());
+		this.add(" Sociality ");
 		this.add(sociality).colspan(2).row();
 		
 		//SPEED (slider 32<x<96)
 
 		speed = new MultiSlider(2, 0, .45f, .005f, false, new MultiSliderStyle(skin.get("default-horizontal", SliderStyle.class)));
-		this.add(" Speed: ");
+		speed.setValue(0, speed.getMinValue());
+		speed.setValue(1, speed.getMaxValue());
+		this.add(" Speed ");
 		this.add(speed).colspan(2).row();
 		
 		
@@ -409,7 +415,7 @@ public class SettingsUI extends Table {
 		palme.addListener(updateSpawnListener);
 		max_fort.addListener(updateEntitiesListener);
 		view_range.addListener(updateEntitiesListener);
-		action_range.addListener(updateEntitiesListener);
+		//action_range.addListener(updateEntitiesListener);
 		//pregnancy.addListener(updateEntitiesListener);
 		hunger.addListener(updateEntitiesListener);
 		maturity.addListener(updateEntitiesListener);
@@ -478,12 +484,12 @@ public class SettingsUI extends Table {
 		{
 			max_fort_val = Integer.parseInt(max_fort.getText());
 			view_val = Integer.parseInt(view_range.getText());
-			action_val = Integer.parseInt(action_range.getText());
+			//action_val = Integer.parseInt(action_range.getText());
 		}
 		catch(Exception ex) {}
 		Mappone.MAX_POPULATION = max_fort_val;
 		Omino.RAGGIO_VISIVO =  view_val;
-		Omino.ACTION_DST = action_val;
+		//Omino.ACTION_DST = action_val;
 		
 		Omino.HUNGER_PER_SECOND = hunger.getValue();
 		Omino.MATURITY = maturity.getValue();
@@ -565,5 +571,6 @@ public class SettingsUI extends Table {
 		map.generateMap();
 	}
 	 */
+	
 	
 }

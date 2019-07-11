@@ -71,14 +71,14 @@ public class EntitySelector implements InputProcessor{
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		this.screenX = screenX;
 		this.screenY = screenY;
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		active = false;
 		Mappone.getInstance().vediRect(new Rectangle(rx, ry, (rx2-rx), (ry2 - ry)));
-		return false;
+		return true;
 	}
 
 	@Override

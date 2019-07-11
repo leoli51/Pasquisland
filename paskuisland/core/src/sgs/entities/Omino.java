@@ -34,7 +34,10 @@ public class Omino extends Entity {
 	public static float MIN_SOCIALITY = 0, MAX_SOCIALITY = 1;
 	public static float MIN_SPEED = 32, MAX_SPEED = 96;
 	
-	public static Texture texture = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
+	
+	public static Texture moai = new Texture(Gdx.files.internal("moai.png"));
+	public static Texture machoMan = new Texture(Gdx.files.internal("ominiEvoluzione.png"));
+	
 	  
 	  public float strength; 
 	  public float speed;
@@ -112,7 +115,11 @@ public class Omino extends Entity {
 
 	public void disegnami(SpriteBatch batch) {
 		setTribuColor(batch);
-		batch.draw(texture, position.x, position.y, 32, 40);
+		if (life > MATURITY) {
+			batch.draw(moai, position.x, position.y, 32, 32);
+		}
+		else
+			batch.draw(machoMan, position.x, position.y, 42, 50);
 		batch.setColor(Color.WHITE);
 	}
 	

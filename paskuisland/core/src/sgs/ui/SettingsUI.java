@@ -324,7 +324,7 @@ public class SettingsUI extends Table {
 		//REPRODUCTIVE AGE
 		
 		maturity = new Slider(0,Omino.MAX_LIFE,.5f, false, skin);
-		maturity.setValue(.1f);
+		maturity.setValue(17);
 		this.add(" Reproductive Age ");
 		this.add(maturity).colspan(2).row();
 		

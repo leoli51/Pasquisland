@@ -111,6 +111,7 @@ public class Omino extends Entity {
 		}
 		
 		batch.setColor(rgb[0], rgb[1], rgb[2], 1);
+		
 	}
 
 	public void disegnami(SpriteBatch batch) {
@@ -254,7 +255,7 @@ public class Omino extends Entity {
 		if (position.dst(Obiettivo.position) < ACTION_DST)
         	cheStamoAFa();
 		
-		hunger = Math.min(hunger+delta*HUNGER_PER_SECOND, 1);
+		hunger = Math.min(Math.max(hunger + (this.speed*this.strength/600)*HUNGER_PER_SECOND, hunger+delta*HUNGER_PER_SECOND), 1);
 		life -= /*delta +*/ delta * hunger;
 		//wait_for_next_child -= delta;
 	}

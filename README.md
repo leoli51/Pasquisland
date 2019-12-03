@@ -1,4 +1,5 @@
-# SGS-Project
+# SGS-Project 
+### (University group project backup)
 
 ## isola di pasqua
 Vogliamo creare un'isola modellandola con una matrice nxn. In quest'isola ci sono delle tribù, che si evolvono e interagiscono tra loro.   
